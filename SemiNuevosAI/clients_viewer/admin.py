@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+admin.site.register(Operation)
+admin.site.register(Owner)
+admin.site.register(OwnerProfile)
+admin.site.register(EconomicProfile)
+admin.site.register(Car)
+
