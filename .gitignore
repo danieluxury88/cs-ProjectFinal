@@ -1,0 +1,7 @@
+*.iml
+/data/
+/.idea/
+*.sqlite3
+/SemiNuevosAI/SemiNuevosAI/__pycache__/
+/SemiNuevosAI/clients_viewer/migrations/__pycache__/
+/SemiNuevosAI/clients_viewer/__pycache__/
