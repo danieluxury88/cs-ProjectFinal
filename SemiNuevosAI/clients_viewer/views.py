@@ -5,8 +5,12 @@ from django.shortcuts import render
 from .database_handler import *
 from .file_reader import *
 
-def index(request):
 
+def test(request):
+    return render(request, "clients_viewer/test.html")
+
+
+def index(request):
     owners = get_all_owners()
     a_owner = get_all_owners().first()
     a_cars = get_owner_cars(a_owner)
@@ -16,9 +20,9 @@ def index(request):
     e_profile = get_owner_economic_profile(a_owner)
 
     b_owners = get_all_owners_according_model('LUV DMAX 4X4')
-    c_owners = get_all_owners_on_a_city('Quito')
+    c_owners = get_all_owners_on_a_city('Ambato')
 
-    context = {'owners': c_owners,
+    context = {'owners': owners,
                'profile': profile,
                'eprofile': e_profile,
                'cars': a_cars}
@@ -26,8 +30,12 @@ def index(request):
 
 
 def load_csv (request):
-    import_csv("data_clean.csv")
+    # import_csv("data_clean.csv")
+    import_csv('E:\MyProjects\Django SemiNuevosAI\SemiNuevosAI\clients_viewer\static\data\data_clean.csv')
     return HttpResponse("loaded ok")
+
+
+
 
 # # Imaginary function to handle an uploaded file.
 # from somewhere import handle_uploaded_file
@@ -41,3 +49,5 @@ def load_csv (request):
 #     else:
 #         form = UploadFileForm()
 #     return render(request, 'upload.html', {'form': form})
+def profile(request):
+    return render(request, "clients_viewer/profile.html")

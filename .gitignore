@@ -1,8 +1,8 @@
 *.iml
-/data/
+/SemiNuevosAI/clients_viewer/static/data/
 /.idea/
 *.sqlite3
-/SemiNuevosAI/SemiNuevosAI/__pycache__/
+/SemiNuevosAI/project/__pycache__/
 /SemiNuevosAI/clients_viewer/migrations/__pycache__/
 /SemiNuevosAI/clients_viewer/__pycache__/
 /SemiNuevosAI/.~lock.data_clean.csv#
