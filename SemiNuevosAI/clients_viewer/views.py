@@ -1,6 +1,9 @@
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
+import json
 
 from .database_handler import *
 from .file_reader import *
@@ -35,19 +38,31 @@ def load_csv (request):
     return HttpResponse("loaded ok")
 
 
+def profile(request, profile_id):
+    owner = Owner.objects.get(id=profile_id)
+    profile = get_owner_profile(owner)
+    eprofile = get_owner_economic_profile(owner)
+    cars = get_owner_cars(owner)
+    operations = Operation.objects.filter(owner =owner).order_by('-date')
+    print("Operations" , operations)
+    context = {'owner': owner,
+               'profile': profile,
+               'eprofile': eprofile,
+               'cars': cars,
+               'operations': operations}
+    return render(request, "clients_viewer/profile.html", context)
 
 
-# # Imaginary function to handle an uploaded file.
-# from somewhere import handle_uploaded_file
-#
-# def upload_file(request):
-#     if request.method == 'POST':
-#         form = UploadFileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             handle_uploaded_file(request.FILES['file'])
-#             return HttpResponseRedirect('/success/url/')
-#     else:
-#         form = UploadFileForm()
-#     return render(request, 'upload.html', {'form': form})
-def profile(request):
-    return render(request, "clients_viewer/profile.html")
+@csrf_exempt
+def register(request, profile_id):
+    if request.method == "POST":
+        print("handled")
+        data = json.loads(request.body)
+        owner = Owner.objects.get(id=profile_id)
+        content = data["content"]
+        requester = request.user
+
+        operation = Operation(operator = requester, owner = owner, comment = content )
+        operation.save()
+
+        return JsonResponse({"msg": "OK", "comment": content})

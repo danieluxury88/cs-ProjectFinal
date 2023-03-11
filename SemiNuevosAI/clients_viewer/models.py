@@ -60,6 +60,7 @@ class Car(models.Model):
 
 
 class Operation(models.Model):
+    operator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null= True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     comment = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)

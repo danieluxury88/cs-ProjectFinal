@@ -9,6 +9,7 @@ urlpatterns = [
 
     # API URLS
 
-    path("profile/", views.profile, name="profile"),
+    path("profile/<int:profile_id>", views.profile, name="profile"),
+    path("register/<int:profile_id>", views.register, name="register"),
 
 ]
