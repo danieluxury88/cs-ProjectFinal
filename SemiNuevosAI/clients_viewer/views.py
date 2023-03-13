@@ -7,10 +7,18 @@ import json
 
 from .database_handler import *
 from .file_reader import *
+from .filters import OwnerFilter
 
 
 def test(request):
-    return render(request, "clients_viewer/test.html")
+
+    owners = get_all_owners()
+    filter = OwnerFilter(request.GET, queryset=owners)
+    filtered_owners = filter.qs
+    context = {'owners': filtered_owners, 'filter':filter}
+
+
+    return render(request, "clients_viewer/test.html", context)
 
 
 def index(request):

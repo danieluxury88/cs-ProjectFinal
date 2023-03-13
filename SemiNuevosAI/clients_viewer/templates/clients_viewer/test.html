@@ -2,5 +2,38 @@
 
 {% block title %}Test{% endblock %}
 {% block body %}
-    <a href="#" onclick="testFunction()"> Test </a>
+
+<a href="#" onclick="testFunction()"> Test </a>
+<h1>{{owners.count}}</h1>
+
+<form class="row g-3" method="get">
+    <div class="col-auto">
+        {{ filter.form }}
+    </div>
+    <button>Search</button>
+</form>
+
+
+
+{% for owner in owners %}
+<div class="card w-50">
+    <div class="card-body">
+        <h5 class="card-title">{{ owner.city}} </h5>
+        <p class="card-text">Mail: {{ owner.mail }} Phone: {{ owner.phone }}</p>
+        <p class="card-text">Id: {{ owner.national_id }} Name: {{ owner.name }}</p>
+        {% if profile %}
+        <p class="card-text">Age: {{ profile.age }} Education: {{ profile.education_level }} Dependants: {{
+            profile.dependents}}</p>
+        <p class="card-text">Homeplace: {{ profile.living_place_type }} Properties: {{ profile.real_state_units }} </p>
+        {% endif %}
+        {% if eprofile %}
+        <p class="card-text">Average Credit: {{ eprofile.average_credit_balance }}/{{ eprofile.credit_cards }}
+            Credit Card Balance: {{ eprofile.credit_card_balance}}</p>
+        {% endif %}
+        <h2> {{ owner.cars }}</h2>
+        <a href="{% url 'profile' owner.id %}" class="btn btn-primary">Contact</a>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}

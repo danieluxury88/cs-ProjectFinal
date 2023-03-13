@@ -11,6 +11,15 @@
         <h6>{{car}}</h6>
     {% endfor %}
 
+    <h3>Other Cars</h3>
+    {% for ocar in owner.cars.all %}
+      <h5>{{ocar}}</h5>
+      <h6>{{ocar.model}} {{ocar.year}}</h6>
+      {% if ocar.plate %}
+        <p>plate : {{ocar.plate}}</p>
+      {% endif %}
+    {% endfor %}
+
     <h2> Operations: </h2>
     {% for operation in operations %}
         <h6>{{operation.comment}} {{operation.date}}</h6>

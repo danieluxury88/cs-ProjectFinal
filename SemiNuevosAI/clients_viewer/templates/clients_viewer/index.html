@@ -2,23 +2,35 @@
 
 {% block title %}Index{% endblock %}
 {% block body %}
-    {% for owner in owners %}
-    <div class="card w-50">
-        <div class="card-body">
-            <h5 class="card-title">{{ owner.city}} </h5>
-            <p class="card-text">Mail: {{ owner.mail }} Phone: {{ owner.phone }}</p>
-            <p class="card-text">Id: {{ owner.national_id }} Name: {{ owner.name }}</p>
-            {% if profile %}
-            <p class="card-text">Age: {{ profile.age }} Education: {{ profile.education_level }} Dependants: {{
-                profile.dependents}}</p>
-            <p class="card-text">Homeplace: {{ profile.living_place_type }} Properties: {{ profile.real_state_units }} </p>
+{% for owner in owners %}
+{% if owner.is_contact_data_valid %}
+<div class="card w-50" style="background-color: lightcyan;">
+    {% elif owner.is_no_valid_data %}
+    <div class="card w-50" style="background-color: lightpink;">
+        {% else %}
+        <div class="card w-50" style="background-color: lightslategrey;">
             {% endif %}
-            {% if eprofile %}
-            <p class="card-text">Average Credit: {{ eprofile.average_credit_balance }}/{{ eprofile.credit_cards }}
-                Credit Card Balance: {{ eprofile.credit_card_balance}}</p>
-            {% endif %}
-            <a href="{% url 'profile' owner.id %}" class="btn btn-primary">Contact</a>
+            <div class="card-body">
+                <h5 class="card-title">{{ owner.city}} {{owner.contact_state}}</h5>
+                <p class="card-text">Mail: {{ owner.mail }} Phone: {{ owner.phone }}</p>
+                <p class="card-text">Id: {{ owner.national_id }} Name: {{ owner.name }}</p>
+                {% if profile %}
+                <p class="card-text">Age: {{ profile.age }} Education: {{ profile.education_level }} Dependants: {{ profile.dependents}}</p>
+                <p class="card-text">Homeplace: {{ profile.living_place_type }} Properties: {{ profile.real_state_units }} </p>
+                {% endif %}
+                {% if eprofile %}
+                <p class="card-text">Average Credit: {{ eprofile.average_credit_balance }}/{{ eprofile.credit_cards }}
+                    Credit Card Balance: {{ eprofile.credit_card_balance}}</p>
+                {% endif %}
+                <h3>Cars</h3>
+                {% for car in owner.cars.all %}
+                    <h6>{{car.model}} {{car.year}}</h6>
+                {% if car.plate %}
+                    <p>plate : {{car.plate}}</p>
+                {% endif %}
+                {% endfor %}
+                <a href="{% url 'profile' owner.id %}" class="btn btn-primary">Contact</a>
+            </div>
         </div>
-    </div>
-    {% endfor %}
-{% endblock %}
+        {% endfor %}
+        {% endblock %}
