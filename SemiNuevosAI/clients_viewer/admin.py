@@ -7,8 +7,8 @@ from .models import *
 # admin.site.register(Owner)
 # admin.site.register(OwnerProfile)
 # admin.site.register(EconomicProfile)
-# admin.site.register(Car)
-admin.site.register(TempOwner)
+admin.site.register(Owner)
 admin.site.register(Mail)
 admin.site.register(Phone)
+admin.site.register(Car)
 
