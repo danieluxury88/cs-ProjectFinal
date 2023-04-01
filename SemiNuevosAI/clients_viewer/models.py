@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
+
 
 
 class User(AbstractUser):
@@ -64,3 +66,35 @@ class Operation(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     comment = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now_add=True)
+
+
+class TempOwner(models.Model):
+    national_id = models.CharField(max_length=10, unique=True)
+    city = models.CharField(max_length=30)
+    name = models.CharField(max_length=50, blank=True, null=True, default='')
+
+
+class Phone(models.Model):
+    owner = models.ForeignKey(TempOwner, on_delete=models.CASCADE, related_name='phones')
+    number = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ('owner', 'number')
+
+    def clean(self):
+        if not self.number.isdigit() or len(self.number) < 9:
+            raise ValidationError("Phone number must have at least 9 digits.")
+
+
+
+def validate_email(value):
+    if value.count('s') != 1:
+        print("test")
+        raise ValidationError('Email address must contain exactly one "@" symbol.')
+
+class Mail(models.Model):
+    owner = models.ForeignKey(TempOwner, on_delete=models.CASCADE, related_name='mails')
+    mail = models.EmailField(max_length=30, blank=True, null=True, default='...', validators=[validate_email])
+    
+    class Meta:
+        unique_together = ('owner', 'mail')
