@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
+
 
 
 
@@ -69,32 +71,47 @@ class Operation(models.Model):
 
 
 class TempOwner(models.Model):
+    # national_id = models.CharField(max_length=10)
     national_id = models.CharField(max_length=10, unique=True)
     city = models.CharField(max_length=30)
     name = models.CharField(max_length=50, blank=True, null=True, default='')
 
 
+def validate_phone(value):
+    print(value)
+    # if not value.isdigit() or len(value) < 9:
+    if len(value) < 9:
+        print('error ', value)
+        raise ValidationError("Phone number must have at least 9 digits.")
+    
+
+
+    
 class Phone(models.Model):
     owner = models.ForeignKey(TempOwner, on_delete=models.CASCADE, related_name='phones')
-    number = models.CharField(max_length=20)
+    number = models.CharField(max_length=20, validators=[MinLengthValidator(9)])
 
-    class Meta:
-        unique_together = ('owner', 'number')
+    # class Meta:
+    #     unique_together = ('owner', 'number')
 
-    def clean(self):
-        if not self.number.isdigit() or len(self.number) < 9:
-            raise ValidationError("Phone number must have at least 9 digits.")
+    def __str__(self) -> str:
+        real_len = len(self.number)
+        return f'{self.owner.national_id} {self.number} {real_len}'
 
 
 
 def validate_email(value):
-    if value.count('s') != 1:
+    if value.count('@') != 1:
         print("test")
         raise ValidationError('Email address must contain exactly one "@" symbol.')
 
 class Mail(models.Model):
     owner = models.ForeignKey(TempOwner, on_delete=models.CASCADE, related_name='mails')
     mail = models.EmailField(max_length=30, blank=True, null=True, default='...', validators=[validate_email])
+    # mail = models.EmailField(max_length=30, blank=True, null=True, default='...')
     
-    class Meta:
-        unique_together = ('owner', 'mail')
+    # class Meta:
+    #     unique_together = ('owner', 'mail')
+
+    def __str__(self) -> str:
+        return f'{self.owner.national_id} {self.mail}'
