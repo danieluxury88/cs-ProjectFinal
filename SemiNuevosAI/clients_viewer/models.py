@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.html import format_html
 
 
 class User(AbstractUser):
@@ -15,6 +18,10 @@ class Owner(models.Model):
     
     def __str__(self) -> str:
         return f'{self.national_id} {self.city}'
+    
+    def car_list(self):
+        return ", ".join([car.__str__() for car in self.cars.all()])
+    car_list.short_description = "Cars Linked"
 
 
 class Phone(models.Model):
@@ -82,8 +89,16 @@ class Car(models.Model):
         unique_together = ('owner', 'brand','model', 'year', 'plate', 'color' )
 
     def __str__(self):
-        return '<Id: {} Model: {} Year: {} Plate: {} Color: {}>' \
-            .format(self.owner.national_id, self.model, self.year, self.plate, self.color)
+        return '< Model: {} Year: {} Plate: {} Color: {}>' \
+            .format(self.model, self.year, self.plate, self.color)
+    
+    def view_owner_link(self):
+        url = (
+            reverse("admin:clients_viewer_owner_changelist")
+            + "?"
+            + urlencode({"owner__pk": f"{self.owner.pk}"})
+        )
+        return format_html('<a href="{}"> Owner</a>', url)
 
 
 class OwnerProfile(models.Model):
